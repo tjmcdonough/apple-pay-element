@@ -30,7 +30,7 @@ export default {
       contract_id: '0x0eAfA761ce742Fb9C9Dc99190cEC726BE85E6Ca4',
       walletId: null,
       token: null,
-      ipaddress: "0.0.0.0",
+      ipaddress: '0.0.0.0',
     };
   },
   mounted() {
@@ -106,7 +106,7 @@ export default {
         })
         .finally(() => (this.loading = false));
     },
-    handleApplePayOrder() {
+    handleApplePayOrder(e) {
       console.log('handleApplePayOrder');
       // variables
       const orderParams = {
@@ -115,9 +115,9 @@ export default {
         fees: this.estimatedTransactionCostUSD,
         token_id: this.tokenId,
         contract_id: this.contractId,
-        walletId: this.wallet,
-        token: this.token,
-        ipaddress: this.IpAddress,
+        walletId: this.walletId,
+        token: e.payment.token,
+        ipaddress: this.ipAddress,
       };
       return Axios.post(`${serverUrl}/user/createApplePayOrder`, orderParams, {
         headers,
