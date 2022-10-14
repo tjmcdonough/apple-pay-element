@@ -5,11 +5,11 @@
       type="buy"
       locale="en-GB"
       @click="onApplePayButtonClicked"
-      
+      v-if="showButton()"
     ></apple-pay-button>
   </div>
 </template>
-<!-- v-if="showButton()" -->
+
 <script>
 import Axios from "axios";
 export default {
