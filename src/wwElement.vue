@@ -72,7 +72,29 @@ export default {
         return;
       }
       // Define ApplePayPaymentRequest
-      var applePayRequest = this.getApplePayRequest();
+      var applePayRequest = {
+  "countryCode": "US",
+  "currencyCode": "USD",
+  "merchantCapabilities": [
+    "supports3DS",
+    "supportsDebit",
+    "supportsCredit"
+  ],
+  "supportedNetworks": [
+    "visa",
+    "masterCard"
+  ],
+  "requiredBillingContactFields": [
+    "postalAddress",
+    "name"
+  ],
+  "total": {
+    "label": "Acme",
+    "amount": 10,
+    "type": "final"
+  }
+}
+ //this.getApplePayRequest();
       //Get Request Based Wyre Quote
       // Create ApplePaySession
       const session = new ApplePaySession(3, applePayRequest);
@@ -102,10 +124,11 @@ export default {
       const raw = JSON.stringify({
         amount: this.amount.toString(),
       });
-      return Axios.post(`${serverUrl}/user/createApplePayRequest`, raw, {
+      Axios.post(`${serverUrl}/user/createApplePayRequest`, raw, {
         headers,
       })
         .then((response) => {
+          console.log('createApplePayRequest: ' + response)
           this.info = response;
         })
         .catch((error) => {
@@ -116,8 +139,9 @@ export default {
     },
     authapplepay() {
       console.log('posting to createApplePaySession');
-      return Axios.post(`${serverUrl}/user/createApplePaySession`, { }, { headers })
+      Axios.post(`${serverUrl}/user/createApplePaySession`, { }, { headers })
         .then((response) => {
+          console.log('createApplePaySession: ' + response)
           this.info = response;
         })
         .catch((error) => {
@@ -139,10 +163,11 @@ export default {
         token: e.payment.token,
         ipaddress: this.ipAddress,
       };
-      return Axios.post(`${serverUrl}/user/createApplePayOrder`, orderParams, {
+      Axios.post(`${serverUrl}/user/createApplePayOrder`, orderParams, {
         headers,
       })
         .then((response) => {
+          console.log('createApplePayOrder: ' + response)
           this.info = response;
         })
         .catch((error) => {
