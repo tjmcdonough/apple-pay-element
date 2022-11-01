@@ -20,6 +20,16 @@ const headers = {
     Authorization: 'Bearer ' + accessToken,
     withCredentials: true,
 };
+
+async function loginToAcmeBackend() {
+    try {
+        await axios.post(`${serverUrl}/user/login`, {}, { headers });
+        console.log('Successfully logged in with payment method');
+    } catch (err) {
+        console.log('Failed to log in ' + err);
+    }
+}
+
 export default {
   data() {
     return {
@@ -44,6 +54,10 @@ export default {
       "https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"
     );
     document.head.appendChild(recaptchaScript);
+
+    axios.defaults.withCredentials = true;
+
+    await loginToAcmeBackend();
   },
   methods: {
     showButton() {
@@ -82,7 +96,7 @@ export default {
     getApplePayRequest() {
       console.log('getApplePayRequest');
       const serverUrl = "https://dev.acmedao.com";
-      this.amount = nftPrice + estimatedTransactionCostUSD;
+      this.amount = this.nftPrice + this.estimatedTransactionCostUSD;
       const raw = JSON.stringify({
         amount: amount.toString(),
       });
