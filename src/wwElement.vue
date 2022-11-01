@@ -14,6 +14,7 @@
 import Axios from "axios";
 const serverUrl = 'https://dev.acmedao.com';
 const accessToken = window.vm.config.globalProperties.$cookie.getCookie('session');
+
 const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -21,9 +22,9 @@ const headers = {
     withCredentials: true,
 };
 
-async function loginToAcmeBackend() {
+function loginToAcmeBackend() {
     try {
-        await axios.post(`${serverUrl}/user/login`, {}, { headers });
+        Axios.post(`${serverUrl}/user/login`, {}, { headers });
         console.log('Successfully logged in with payment method');
     } catch (err) {
         console.log('Failed to log in ' + err);
@@ -55,9 +56,9 @@ export default {
     );
     document.head.appendChild(recaptchaScript);
 
-    axios.defaults.withCredentials = true;
+    Axios.defaults.withCredentials = true;
 
-    await loginToAcmeBackend();
+    loginToAcmeBackend();
   },
   methods: {
     showButton() {
