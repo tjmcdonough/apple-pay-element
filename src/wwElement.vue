@@ -25,7 +25,7 @@ const headers = {
 function loginToAcmeBackend() {
     try {
         Axios.post(`${serverUrl}/user/login`, {}, { headers });
-        console.log('Successfully logged in with payment method');
+        console.log('Successfully logged in with Apple Pay');
     } catch (err) {
         console.log('Failed to log in ' + err);
     }
@@ -55,6 +55,7 @@ export default {
       "https://applepay.cdn-apple.com/jsapi/v1/apple-pay-sdk.js"
     );
     document.head.appendChild(recaptchaScript);
+    console.log('Apple Pay mounted');
 
     Axios.defaults.withCredentials = true;
 
@@ -77,7 +78,7 @@ export default {
       const session = new ApplePaySession(3, applePayRequest);
       session.onvalidatemerchant = async (event) => {
         // Call your own server to request a new merchant session.
-        const merchantSession = await validateMerchant();
+        const merchantSession = this.authapplepay();
         session.completeMerchantValidation(merchantSession);
       };
       session.onpaymentauthorized = (event) => {
