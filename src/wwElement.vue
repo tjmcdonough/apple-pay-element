@@ -34,7 +34,7 @@ function loginToAcmeBackend() {
 export default {
   data() {
     return {
-      info: null,
+      responseObject: null,
       loading: true,
       errored: false,
       // These need to be set
@@ -72,38 +72,18 @@ export default {
         return;
       }
       // Define ApplePayPaymentRequest
-      var applePayRequest = {
-  "countryCode": "US",
-  "currencyCode": "USD",
-  "merchantCapabilities": [
-    "supports3DS",
-    "supportsDebit",
-    "supportsCredit"
-  ],
-  "supportedNetworks": [
-    "visa",
-    "masterCard"
-  ],
-  "requiredBillingContactFields": [
-    "postalAddress",
-    "name"
-  ],
-  "total": {
-    "label": "Acme",
-    "amount": 10,
-    "type": "final"
-  }
-}
- //this.getApplePayRequest();
+      this.getApplePayRequest();
       //Get Request Based Wyre Quote
       // Create ApplePaySession
-      const session = new ApplePaySession(3, applePayRequest);
+      const session = new ApplePaySession(3, this.responseObject);
       session.onvalidatemerchant = async (event) => {
+        console.log('onvalidatemerchant')
         // Call your own server to request a new merchant session.
         const merchantSession = this.authapplepay();
         session.completeMerchantValidation(merchantSession);
       };
       session.onpaymentauthorized = (event) => {
+        console.log('onpaymentauthorized')
         // Define ApplePayPaymentAuthorizationResult
         const result = {
           status: ApplePaySession.STATUS_SUCCESS,
@@ -129,7 +109,7 @@ export default {
       })
         .then((response) => {
           console.log('createApplePayRequest: ' + response)
-          this.info = response;
+          this.responseObject = response;
         })
         .catch((error) => {
           console.log(error);
@@ -142,7 +122,7 @@ export default {
       Axios.post(`${serverUrl}/user/createApplePaySession`, { }, { headers })
         .then((response) => {
           console.log('createApplePaySession: ' + response)
-          this.info = response;
+          this.responseObject = response;
         })
         .catch((error) => {
           console.log(error);
@@ -168,7 +148,7 @@ export default {
       })
         .then((response) => {
           console.log('createApplePayOrder: ' + response)
-          this.info = response;
+          this.responseObject = response;
         })
         .catch((error) => {
           console.log(error);
