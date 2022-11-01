@@ -68,34 +68,10 @@ export default {
     //Invoked Method
     onApplePayButtonClicked() {
       console.log('onApplePayButtonClicked');
-      if (!ApplePaySession) {
-        return;
-      }
-      // Define ApplePayPaymentRequest
+
       this.getApplePayRequest();
-      //Get Request Based Wyre Quote
-      // Create ApplePaySession
-      const session = new ApplePaySession(3, this.responseObject);
-      session.onvalidatemerchant = async (event) => {
-        console.log('onvalidatemerchant')
-        // Call your own server to request a new merchant session.
-        const merchantSession = this.authapplepay();
-        session.completeMerchantValidation(merchantSession);
-      };
-      session.onpaymentauthorized = (event) => {
-        console.log('onpaymentauthorized')
-        // Define ApplePayPaymentAuthorizationResult
-        const result = {
-          status: ApplePaySession.STATUS_SUCCESS,
-        };
-        session.completePayment(result);
-        handleApplePayOrder(event);
-      };
-      session.oncancel = (event) => {
-        console.log("Payment cancelled by WebKit");
-        // Payment cancelled by WebKit
-      };
-      session.begin();
+
+      
     },
     getApplePayRequest() {
       console.log('posting to createApplePayRequest');
@@ -108,8 +84,38 @@ export default {
         headers,
       })
         .then((response) => {
-          console.log('createApplePayRequest: ' + response)
+          console.log('createApplePayRequest: ' + JSON.stringify(response))
           this.responseObject = response;
+
+          if (!ApplePaySession) {
+            return;
+          }
+          // Define ApplePayPaymentRequest
+          
+          //Get Request Based Wyre Quote
+          // Create ApplePaySession
+          const session = new ApplePaySession(3, response);
+          session.onvalidatemerchant = async (event) => {
+            console.log('onvalidatemerchant')
+            // Call your own server to request a new merchant session.
+            const merchantSession = this.authapplepay();
+            session.completeMerchantValidation(merchantSession);
+          };
+          session.onpaymentauthorized = (event) => {
+            console.log('onpaymentauthorized')
+            // Define ApplePayPaymentAuthorizationResult
+            const result = {
+              status: ApplePaySession.STATUS_SUCCESS,
+            };
+            session.completePayment(result);
+            handleApplePayOrder(event);
+          };
+          session.oncancel = (event) => {
+            console.log("Payment cancelled by WebKit");
+            // Payment cancelled by WebKit
+          };
+          session.begin();
+         
         })
         .catch((error) => {
           console.log(error);
