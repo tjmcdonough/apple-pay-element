@@ -12,16 +12,20 @@
 <!-- v-if="showButton()" -->
 <script>
 import Axios from "axios";
+const serverUrl = 'https://dev.acmedao.com';
+const accessToken = window.vm.config.globalProperties.$cookie.getCookie('session');
+const headers = {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    Authorization: 'Bearer ' + accessToken,
+    withCredentials: true,
+};
 export default {
   data() {
     return {
       info: null,
       loading: true,
       errored: false,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
       // These need to be set
       nftPrice: 15.59,
       estimatedTransactionCostUSD: 49.59,
