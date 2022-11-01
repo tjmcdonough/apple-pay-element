@@ -96,11 +96,11 @@ export default {
       session.begin();
     },
     getApplePayRequest() {
-      console.log('getApplePayRequest');
+      console.log('posting to createApplePayRequest');
       const serverUrl = "https://dev.acmedao.com";
       this.amount = this.nftPrice + this.estimatedTransactionCostUSD;
       const raw = JSON.stringify({
-        amount: amount.toString(),
+        amount: this.amount.toString(),
       });
       return Axios.post(`${serverUrl}/user/createApplePayRequest`, raw, {
         headers,
@@ -115,8 +115,8 @@ export default {
         .finally(() => (this.loading = false));
     },
     authapplepay() {
-      console.log('createApplePaySession');
-      return Axios.get(`${serverUrl}/user/createApplePaySession`)
+      console.log('posting to createApplePaySession');
+      return Axios.post(`${serverUrl}/user/createApplePaySession`, { }, { headers })
         .then((response) => {
           this.info = response;
         })
